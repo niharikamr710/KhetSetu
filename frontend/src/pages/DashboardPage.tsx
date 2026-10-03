@@ -63,7 +63,7 @@ export default function DashboardPage() {
         <div>
           <p className="ks-eyebrow">{today} <span aria-hidden="true">·</span> {t('nav_home')}</p>
           <h1>{t('welcome')}{profile?.full_name ? `, ${profile.full_name}` : ''}</h1>
-          <p className="ks-welcome-copy">Your crops, health checks, and market information — all in one place.</p>
+          <p className="ks-welcome-copy">{t('dashboard_welcome_copy')}</p>
         </div>
         <div className="ks-welcome-actions">
           {profile?.district && (
@@ -89,31 +89,31 @@ export default function DashboardPage() {
       <section className="ks-stats-grid" aria-label="Farm overview">
         <Link to="/profile" className="ks-stat-card ks-panel">
           <div className="ks-stat-heading">
-            <span className="ks-eyebrow">FARM AREA</span>
+            <span className="ks-eyebrow">{t('dashboard_farm_area').toUpperCase()}</span>
             <span className="ks-stat-icon"><Sprout size={19} /></span>
           </div>
-          <strong className="ks-stat-value">{farmArea ?? 'Add details'}</strong>
+          <strong className="ks-stat-value">{farmArea ?? t('add_details')}</strong>
           <span className="ks-stat-caption">
-            {farmArea ? 'Registered farm size' : 'Complete your farm profile'}
+            {farmArea ? t('dashboard_registered_farm_size') : t('dashboard_complete_profile')}
           </span>
         </Link>
 
         <Link to="/history" className="ks-stat-card ks-panel">
           <div className="ks-stat-heading">
-            <span className="ks-eyebrow">CROP RECORDS</span>
+            <span className="ks-eyebrow">{t('dashboard_crop_records').toUpperCase()}</span>
             <span className="ks-stat-icon"><Clock3 size={19} /></span>
           </div>
           <strong className="ks-stat-value">{history.length.toString().padStart(2, '0')}</strong>
-          <span className="ks-stat-caption">Saved scans on this device</span>
+          <span className="ks-stat-caption">{t('dashboard_saved_scans')}</span>
         </Link>
 
         <Link to="/advisory" className="ks-stat-card ks-voice-panel ks-panel">
           <div className="ks-stat-heading">
-            <span className="ks-eyebrow">FARMER ADVISORY</span>
+            <span className="ks-eyebrow">{t('dashboard_farmer_advisory').toUpperCase()}</span>
             <span className="ks-stat-icon"><BookOpen size={19} /></span>
           </div>
-          <strong className="ks-stat-value">Crop care</strong>
-          <span className="ks-stat-caption">Practical guidance for supported crops</span>
+          <strong className="ks-stat-value">{t('dashboard_crop_care')}</strong>
+          <span className="ks-stat-caption">{t('dashboard_practical_guidance')}</span>
         </Link>
       </section>
 
@@ -121,10 +121,10 @@ export default function DashboardPage() {
         <div className="ks-panel ks-activity-panel">
           <div className="ks-section-heading">
             <div>
-              <p className="ks-eyebrow">YOUR FIELD PROFILE</p>
-              <h2>Crop scan activity</h2>
+              <p className="ks-eyebrow">{t('dashboard_field_profile_title').toUpperCase()}</p>
+              <h2>{t('dashboard_crop_scan_activity')}</h2>
             </div>
-            <span className="ks-activity-badge">{history.length} {history.length === 1 ? 'scan' : 'scans'}</span>
+            <span className="ks-activity-badge">{history.length} {history.length === 1 ? t('dashboard_single_scan') : t('dashboard_multiple_scans')}</span>
           </div>
 
           {cropActivity.length ? (
@@ -132,7 +132,7 @@ export default function DashboardPage() {
               {cropActivity.map(({ crop, count }) => (
                 <div className="ks-activity-row" key={crop}>
                   <span className="ks-activity-crop"><Leaf size={16} aria-hidden="true" />{crop}</span>
-                  <span className="ks-activity-track" aria-label={`${count} scans`}>
+                  <span className="ks-activity-track" aria-label={`${count} ${count === 1 ? t('dashboard_single_scan') : t('dashboard_multiple_scans')}`}>
                     <span style={{ width: `${Math.max(8, (count / maxActivity) * 100)}%` }} />
                   </span>
                   <strong>{count}</strong>
@@ -143,23 +143,23 @@ export default function DashboardPage() {
             <div className="ks-empty-activity">
               <span className="ks-empty-icon"><ScanLine size={22} /></span>
               <div>
-                <strong>Your crop activity will show here</strong>
-                <p>Scan a leaf to start building your private, on-device crop record.</p>
+                <strong>{t('dashboard_activity_empty_title')}</strong>
+                <p>{t('dashboard_activity_empty_desc')}</p>
               </div>
             </div>
           )}
 
           <div className="ks-panel-footer">
-            <span><i className="ks-dot ks-dot-green" /> Scans saved on this device</span>
-            <Link to="/history" className="ks-inline-link">View history <ArrowRight size={15} /></Link>
+            <span><i className="ks-dot ks-dot-green" /> {t('dashboard_scans_saved_on_device')}</span>
+            <Link to="/history" className="ks-inline-link">{t('dashboard_view_history')} <ArrowRight size={15} /></Link>
           </div>
         </div>
 
         <div className="ks-panel ks-diagnosis-panel">
           <div className="ks-section-heading">
             <div>
-              <p className="ks-eyebrow">PRECISION FARMING · AI</p>
-              <h2>Crop health diagnosis</h2>
+              <p className="ks-eyebrow">{t('dashboard_precision_farming').toUpperCase()}</p>
+              <h2>{t('dashboard_crop_health_diagnosis')}</h2>
             </div>
             <ModelStatus compact />
           </div>
@@ -172,28 +172,28 @@ export default function DashboardPage() {
                 <span className="ks-latest-thumb ks-latest-placeholder"><Camera size={20} /></span>
               )}
               <div className="ks-latest-details">
-                <span className="ks-muted">Latest saved scan</span>
+                <span className="ks-muted">{t('dashboard_latest_saved_scan')}</span>
                 <strong>{localName(latestScan, 'crop', language)} · {latestScan.is_healthy ? t('healthy_leaf') : localName(latestScan, 'disease', language)}</strong>
-                <span className="ks-confidence">{Math.round(latestScan.confidence * 100)}% confidence</span>
+                <span className="ks-confidence">{t('dashboard_confidence').replace('{value}', String(Math.round(latestScan.confidence * 100)))}</span>
               </div>
             </div>
           ) : (
             <div className="ks-empty-diagnosis">
               <CheckCircle2 size={22} />
               <div>
-                <strong>No crop scans yet</strong>
-                <p>Your latest diagnosis will appear here after your first scan.</p>
+                <strong>{t('dashboard_no_crop_scans')}</strong>
+                <p>{t('dashboard_no_crop_scans_desc')}</p>
               </div>
             </div>
           )}
 
-          <p className="ks-diagnosis-note">A diagnosis is only shown when the model is confident enough.</p>
+          <p className="ks-diagnosis-note">{t('dashboard_diagnosis_note')}</p>
           <Link to="/scan" className="ks-primary-action">
-            <Camera size={17} /> Start a crop scan <ArrowRight size={16} />
+            <Camera size={17} /> {t('dashboard_start_crop_scan')} <ArrowRight size={16} />
           </Link>
           {latestScan && (
             <button type="button" onClick={viewLatestResult} className="ks-secondary-link">
-              View latest result
+              {t('dashboard_view_latest_result')}
             </button>
           )}
         </div>
@@ -202,12 +202,12 @@ export default function DashboardPage() {
       <section className="ks-quick-links" aria-label="Farm tools">
         <Link to="/market" className="ks-quick-link ks-panel">
           <span className="ks-quick-icon"><LineChart size={19} /></span>
-          <span><strong>Market prices</strong><small>Check mandi prices and source status</small></span>
+          <span><strong>{t('dashboard_market_prices')}</strong><small>{t('dashboard_market_prices_desc')}</small></span>
           <ArrowRight size={17} />
         </Link>
         <Link to="/advisory" className="ks-quick-link ks-panel">
           <span className="ks-quick-icon"><BookOpen size={19} /></span>
-          <span><strong>Crop advisory</strong><small>Explore disease and crop care guidance</small></span>
+          <span><strong>{t('dashboard_crop_advisory_link')}</strong><small>{t('dashboard_crop_advisory_desc')}</small></span>
           <ArrowRight size={17} />
         </Link>
       </section>
