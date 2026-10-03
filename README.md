@@ -51,6 +51,10 @@ khetsetu/
   pretending to work.
 - Local, on-device scan history (no login needed); optional server-side aggregate log with no
   images or farmer identity.
+- The signed-in workspace has a Home dashboard with farm overview, saved scan activity, the latest
+  diagnosis, and shortcuts to market prices and crop advisory. Desktop navigation uses a sidebar;
+  mobile navigation uses a bottom bar. The light-green workspace background includes a subtle grass
+  illustration, and the sidebar profile control shows the signed-in user's name and email.
 
 ## 3. Architecture
 
@@ -197,6 +201,10 @@ npm run dev
 
 Open `http://localhost:5173`. Vite proxies `/api` to `http://127.0.0.1:8000` (see
 `frontend/vite.config.ts`), so start the backend first.
+
+After signing in and completing onboarding, the app opens the Home dashboard. Use the sidebar on
+desktop or the bottom navigation on mobile to open Scan, Market, Advisory, History, and Settings.
+The Home dashboard's scan button opens the same crop scanner as the Scan navigation item.
 
 Production build: `npm run build` (output in `frontend/dist/`, a full installable PWA).
 

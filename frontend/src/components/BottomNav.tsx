@@ -6,7 +6,7 @@ export default function BottomNav({ dark = false }: { dark?: boolean }) {
   const { t } = useLanguage();
 
   const items = [
-    { to: '/', icon: Home, label: t('nav_home') },
+    { to: '/home', icon: Home, label: t('nav_home') },
     { to: '/scan', icon: ScanLine, label: t('nav_scan') },
     { to: '/market', icon: LineChart, label: t('nav_market') },
     { to: '/history', icon: History, label: t('nav_history') },
