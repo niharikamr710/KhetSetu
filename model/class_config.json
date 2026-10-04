@@ -13,6 +13,7 @@
    "is_healthy": false,
    "scope": "mvp_substitute",
    "note": "Guide lists Corn Northern Leaf Blight; it is NOT in the uploaded dataset, so Corn Common Rust (the only corn disease present) is used."
+   
   },
   {
    "index": 1,
