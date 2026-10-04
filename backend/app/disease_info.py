@@ -185,6 +185,12 @@ def _make_compat_profile(profile: dict, class_name: str) -> dict:
     output["consult_expert_when"] = output.get("when_to_seek_help", {})
     output["watering_care"] = output.get("watering_care", {})
 
+    # Include nutrient_guidance with robust bilingual fallbacks
+    output["nutrient_guidance"] = profile.get("nutrient_guidance", _list_section(
+        en=["Apply balanced NPK fertilizer according to soil test recommendations."],
+        hi=["मिट्टी परीक्षण की सिफारिशों के अनुसार संतुलित NPK उर्वरक का प्रयोग करें।"]
+    ))
+
     # Combine multi-language list items into narrative paragraphs for possible_cause
     possible_cause_map = {}
     for lang, items in output.get("why_it_happened", {}).items():
@@ -284,7 +290,7 @@ DISEASE_INFO: dict[str, dict] = {
             hi=["सफाई और फसल चक्र अपनाएं।", "आवश्यक होने पर कवकनाशी का प्रयोग करें।"],
             kn=["ಬೆಳೆ ಪರಿವರ್ತನೆ ಮಾಡಿ ಮತ್ತು ನೈರ್ಮಲ್ಯ ಕಾಪಾಡಿ."],
             ta=["பூஞ்சாkillியை தெளிக்கவும்."],
-            te=["తగిన శిలీంధ్రనాశకాన్ని పిచికారీ చేయండి."],
+            te=["తగిన శిలీంధ్రనాశకాన్ని పిచಿಕారీ చేయండి."],
             mr=["पिकांची आलटपालट करा आणि स्वच्छ ठेवा.", "योग्य बुरशीनाशक वापरा."],
             bn=["ফসলের পর্যায়বৃত্তি করুন।", "প্রয়োজনে উপযুক্ত ছত্রাকনাশক ব্যবহার করুন।"]
         ),
@@ -321,13 +327,13 @@ DISEASE_INFO: dict[str, dict] = {
         "disease": "Late Blight",
         "is_healthy": False,
         "what_we_found": _narrative_section(
-            en="The leaf shows water-soaked lesions that can spread rapidly in cool, wet weather.",
+            en="The leaf shows water-soaked lesions from late blight that can spread rapidly in cool, wet weather.",
             hi="पत्ते में पछेती झुलसा के अनुरूप पानी जैसे धब्बे दिख रहे हैं जो तेजी से फैल सकते हैं।",
             kn="ಆಲೂಗಡ್ಡೆ ಎಲೆಯಲ್ಲಿ ನೀರು ತುಂಬಿದ ಕಪ್ಪು ಕಲೆಗಳು ಮತ್ತು ತೇವದ ವಾತಾವರಣದಲ್ಲಿ ಬಿಳಿ ಶಿಲೀಂಧ್ರ ಕಂಡುಬಂದಿದೆ.",
             ta="இலைகளில் நீர் கோர்த்த கரும் புள்ளிகள் தென்படுகின்றன.",
             te="ఆకులపై కమ్ముకున్న నల్లటి మచ్చలు కనిపిస్తున్నాయి.",
             mr="पानांवर पाण्यासारखे काळे ठिपके दिसत आहेत जे थंड हवामानात वेगाने पसरतात.",
-            bn="পাতায় কালচে ভেজা দাগ দেখা যাচ্ছে যা ঠাণ্ডা আবহাওয়ায় দ্রুত ছড়ায়।"
+            bn="পাতায় কালচে ভেজা দাগ দেখা যাচ্ছে যা ঠাণ্ডা আবহাওয়ায ় দ্রুত ছড়ায়।"
         ),
         "why_it_happened": _list_section(
             en=["Late blight is caused by Phytophthora infestans.", "Cool nights and humidity create ideal conditions."],
@@ -366,7 +372,7 @@ DISEASE_INFO: dict[str, dict] = {
             hi=["खेत की निगरानी करें और संक्रमित ऊतक हटाएं।", "तुरंत लक्षित कवकनाशी का प्रयोग करें।"],
             kn=["ತಕ್ಷಣವೇ ಅನುಮೋದಿತ ಶಿಲೀಂಧ್ರನಾಶಕ ಬಳಸಿ."],
             ta=["உடனடியாக பூஞ்சாkillியை தெளிக்கவும்."],
-            te=["వెంటనే తగిన శిలీంధ్రనాಶకాన్ని పిచికారీ చేయండి."],
+            te=["వెంటనే తగిన శిలీంధ్రనాಶకాన్ని పిచಿಕారీ చేయండి."],
             mr=["योग्य बुरशीनाशकाची त्वरित फवारणी करा."], bn=["অনুমোদিত ছত্রাকনাশক অবিলম্বে স্প্রে করুন।"]
         ),
         "watering_care": _list_section(
@@ -481,7 +487,7 @@ DISEASE_INFO: dict[str, dict] = {
             hi=["सफाई और फसल चक्र का उपयोग करें।", "तांबा आधारित कवकनाशी का प्रयोग करें।"],
             kn=["ತಾಮ್ರ ಆಧಾರಿತ ಶಿಲೀಂಧ್ರನಾಶಕ ಬಳಸಿ."],
             ta=["காப்பர் பூஞ்சாkillியை தெளிக்கவும்."],
-            te=["కాపర్ ఆధారిత శిలీంధ్రనాశకాన్ని పిచಿಕారీ చేయండి."],
+            te=["కాపర్ ఆధారిత శిలీంధ్రనాశకాన్ని పిచికారీ చేయండి."],
             mr=["कॉपरयुक्त बुरशीनाशक वापरा."], bn=["কপারযুক্ত ছত্রাকনাশক স্প্রে করুন।"]
         ),
         "watering_care": _list_section(
@@ -508,8 +514,8 @@ DISEASE_INFO: dict[str, dict] = {
             ta=["இலை உதிர்வு அதிகமாக இருந்தால்."], te=["ఆకులు ఎక్కువగా రాలిపోతుంటే."],
             mr=["पाने मोठ्या प्रमाणात गळत असल्यास."], bn=["পাতা অতিরিক্ত ঝরে পড়লে।"]
         ),
-        "severity": _narrative_section(en="Moderate", hi="मध्यम", kn="ಮಧ್ಯಮ", ta="மிதமான", te="మధ్యస్థం", mr="मध्यम", bn="মাঝারি"),
-        "spread_risk": _narrative_section(en="High", hi="उच्च", kn="ಹೆಚ್ಚು", ta="அதிகம்", te="எక్కువ", mr="उच्च", bn="বেশি"),
+        "severity": _narrative_section(en="Moderate", hi="मध्यम", kn="ಮಧ್ಯಮ", ta="மிதமான", te="మధ్యస్థం", mr="मध्यम", bn="माझारी"),
+        "spread_risk": _narrative_section(en="High", hi="उच्च", kn="ಹೆಚ್ಚು", ta="அதிகம்", te="ఎక్కువ", mr="उच्च", bn="বেশি"),
         "hindi": {"disease": "अगेती झुलसा"},
     },
     "Tomato_late_blight": {
@@ -517,7 +523,7 @@ DISEASE_INFO: dict[str, dict] = {
         "disease": "Late Blight",
         "is_healthy": False,
         "what_we_found": _narrative_section(
-            en="The tomato leaf shows water-soaked lesions expanding under cool conditions.",
+            en="The tomato leaf shows water-soaked lesions expanding under cool conditions, typical of late blight infection.",
             hi="टमाटर के पत्ते में पछेती झुलसा के अनुरूप पानी जैसे धब्बे दिख रहे हैं।",
             kn="ಟೊಮೆಟೊ ಎಲೆಯಲ್ಲಿ ಲೇಟ್ ಬ್ಲೈಟ್ ರೋಗದ ಲಕ್ಷಣಗಳು ಕಂಡುಬಂದಿವೆ.",
             ta="தக்காளி இலையில் லேட் பிளைட் நோயின் அறிகுறிகள் தென்படுகின்றன.",
@@ -663,7 +669,7 @@ DISEASE_INFO: dict[str, dict] = {
             hi=["शुरुआती मौसम में गंभीर होने पर कवकनाशी दें।"],
             kn=["ರೋಗ ತೀವ್ರವಾಗಿದ್ದರೆ ಶಿಲೀಂಧ್ರನಾಶಕ ಬಳಸಿ."],
             ta=["தேவைப்பட்டால் பூஞ்சாkillியை தெளிக்கவும்."],
-            te=["అవసరమైతే శిలీంధ్రనాశకాన్ని పిచಿಕారీ చేయండి."],
+            te=["అవసరమైతే శిలీంధ్రనాశకాన్ని పిచికారీ చేయండి."],
             mr=["गरज भासल्यास योग्य बुरशीनाशक वापरा."], bn=["প্রয়োজনে উপযুক্ত ছত্রাকনাশক ব্যবহার করুন।"]
         ),
         "watering_care": _list_section(
@@ -697,7 +703,7 @@ DISEASE_INFO: dict[str, dict] = {
             mr=["१०-१५% पेक्षा जास्त पानांवर रोग पसरल्यास."], bn=["১৫% এর বেশি পাতায় ছড়ালে কৃষি অফিসে যোগাযোগ করুন।"]
         ),
         "severity": _narrative_section(en="Moderate", hi="मध्यम", kn="ಮಧ್ಯಮ", ta="மிதமான", te="மధ్యస్థం", mr="मध्यम", bn="মাঝারি"),
-        "spread_risk": _narrative_section(en="Moderate", hi="मध्यम", kn="ಮಧ್ಯಮ", ta="மிதமான", te="மధ్యస్థం", mr="मध्यम", bn="মাঝারি"),
+        "spread_risk": _narrative_section(en="Moderate", hi="मध्यम", kn="ಮಧ್ಯಮ", ta="ಮಿதமான", te="மధ్యస్థం", mr="मध्यम", bn="মাঝারি"),
         "hindi": {"disease": "सामान्य रस्ट"},
     },
     "Corn_healthy": {
