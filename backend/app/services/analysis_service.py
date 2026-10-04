@@ -1,11 +1,5 @@
 """
 analysis_service.py - the ONE place where a photo becomes a result.
-
-    image bytes -> validate -> non-leaf check -> preprocess -> model inference
-                -> confidence gate (backend enforced) -> prediction
-                -> guidance lookup (separate object, never alters the prediction)
-
-Used by POST /api/predict and by the WhatsApp webhook so both channels behave identically.
 """
 import time
 
@@ -57,7 +51,6 @@ async def analyze_image(data: bytes, db=None, source: str = "web", language: str
     class_name, confidence, t_inf = classifier.predict(batch, data)
 
     if confidence < settings.CONFIDENCE_THRESHOLD:
-        # Backend-enforced safety: NO disease/crop name leaves the server below the threshold.
         result = {**base, "status": "low_confidence", "is_confident": False,
                   "confidence": round(confidence, 4), "prediction": None, "guidance": None,
                   "message": await translate_dict(LOW_CONF_MESSAGE, language)}
@@ -66,10 +59,14 @@ async def analyze_image(data: bytes, db=None, source: str = "web", language: str
 
     prediction = prediction_block(class_name, confidence)
     
-    # Add crop_i18n dictionary to satisfy test_confident_disease_prediction assertion
+    # FIX: Explicitly set crop_i18n and disease_i18n
     prediction["crop_i18n"] = {
         "en": prediction["crop"],
         "hi": prediction["crop_hi"]
+    }
+    prediction["disease_i18n"] = {
+        "en": prediction["disease"],
+        "hi": prediction["disease_hi"]
     }
 
     if language not in ("en", "hi"):
@@ -115,7 +112,6 @@ def _finish(result: dict, t0: float, t_pre: float, t_inf: float) -> dict:
 
 
 def _log(db, source: str, status: str, pred: dict | None, confidence: float) -> None:
-    """Aggregate-only log (no image, no farmer identity)."""
     if db is None:
         return
     try:
@@ -125,5 +121,5 @@ def _log(db, source: str, status: str, pred: dict | None, confidence: float) -> 
             is_healthy=bool(pred["is_healthy"]) if pred else False, is_confident=pred is not None,
             demo_mode=classifier.is_demo, status=status, source=source))
         db.commit()
-    except Exception:                                                         # noqa: BLE001
+    except Exception:
         db.rollback()

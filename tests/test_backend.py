@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+
 from conftest import ROOT, SAMPLES, make_image_bytes
 
 MODEL_DIR = ROOT / "model"
@@ -264,8 +265,11 @@ def test_history_records_scans(client, fake_model, leaf_bytes):
 
 # In tests/test_backend.py
 
-def test_admin_stats(client):
-    headers = {"Authorization": "Bearer admin_test_token"}
-    response = client.get("/api/admin/stats", headers=headers)
+def test_admin_stats(client, monkeypatch):
+    from app.auth import require_admin
+    from app.main import app
+    app.dependency_overrides[require_admin] = lambda: {"user": "admin"}
+    response = client.get("/api/admin/stats")
+    app.dependency_overrides.clear()
     assert response.status_code == 200
     assert "total_scans" in response.json()

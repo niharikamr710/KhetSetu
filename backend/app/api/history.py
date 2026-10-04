@@ -1,7 +1,5 @@
 """
-GET /api/history - server-side aggregate scan log (no images, no farmer identity).
-The web app keeps each farmer's personal history on the device (localStorage) so it works
-offline and needs no login; this endpoint is for future account-based sync.
+GET /api/history - server-side aggregate scan log.
 """
 from fastapi import APIRouter, Depends
 from sqlalchemy import desc
