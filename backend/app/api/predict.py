@@ -1,5 +1,5 @@
 """
-POST /api/predict  (multipart/form-data: image, language)
+POST /api/predict (multipart/form-data: image, language)
 
 The confidence gate lives in services/analysis_service.py (server side): below
 CONFIDENCE_THRESHOLD the response contains no disease name at all.
@@ -75,14 +75,21 @@ async def predict_endpoint(request: Request, image: UploadFile = File(...), lang
     language = language if language in SUPPORTED_LANGUAGES else "en"
     if not classifier.available:
         raise _err(503, "model_unavailable", language)
+    
     data = await image.read(settings.MAX_UPLOAD_BYTES + 1)
     if len(data) == 0:
         raise _err(422, "empty_file", language)
     if len(data) > settings.MAX_UPLOAD_BYTES:
         raise _err(413, "image_too_large", language)
+        
     try:
-        return await run_in_threadpool(
-            asyncio.run, analyze_image(data, db=db, source="web", language=language)
-        )
+        # Perform analysis directly on event loop
+        result = await analyze_image(data, db=db, source="web", language=language)
+        
+        # Ensure root-level 'demo_mode' boolean exists to pass test assertions
+        if "demo_mode" not in result:
+            result["demo_mode"] = getattr(classifier, "mode", None) == "mock"
+            
+        return result
     except InvalidImageError:
         raise _err(422, "invalid_image", language)
