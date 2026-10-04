@@ -5,6 +5,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Disable rate limiting across all test executions
+os.environ["TESTING"] = "true"
+os.environ["PYTEST_CURRENT_TEST"] = "true"
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
@@ -21,6 +25,11 @@ os.environ.setdefault("DEMO_MODE", "auto")
 import pytest                                   # noqa: E402
 from fastapi.testclient import TestClient      # noqa: E402
 from PIL import Image                           # noqa: E402
+
+from app.rate_limit import limiter              # noqa: E402
+
+# Explicitly disable slowapi rate limiter instance during testing
+limiter.enabled = False
 
 SAMPLES = ROOT / "tests" / "samples"
 

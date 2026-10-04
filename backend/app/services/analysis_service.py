@@ -65,17 +65,26 @@ async def analyze_image(data: bytes, db=None, source: str = "web", language: str
         return _finish(result, t0, t_pre, t_inf)
 
     prediction = prediction_block(class_name, confidence)
+    
+    # Add crop_i18n dictionary to satisfy test_confident_disease_prediction assertion
+    prediction["crop_i18n"] = {
+        "en": prediction["crop"],
+        "hi": prediction["crop_hi"]
+    }
+
     if language not in ("en", "hi"):
         crop_field, disease_field = f"crop_{language}", f"disease_{language}"
         if not prediction.get(crop_field):
             prediction[crop_field] = await translate_text(prediction["crop"], language)
         if not prediction.get(disease_field):
             prediction[disease_field] = await translate_text(prediction["disease"], language)
+
     guidance = await translate_dict(get_guidance(class_name), language)
     guidance.setdefault("what_should_i_do", guidance.get("immediate_actions", []))
     guidance.setdefault("treatment", guidance.get("management", []))
     guidance.setdefault("when_to_seek_help", guidance.get("consult_expert_when", []))
     advisory = guidance
+
     result = {**base, "status": "ok", "is_confident": True, "confidence": prediction["confidence"],
               "prediction": prediction, "guidance": guidance, "advisory": advisory, "message": None,
               "symptoms": guidance["symptoms"],
@@ -87,12 +96,14 @@ async def analyze_image(data: bytes, db=None, source: str = "web", language: str
               "severity": guidance["severity"],
               "spread_risk": guidance["spread_risk"],
               "source": "ml_model", "explanation_source": "guidance"}
+
     extra = await ai_explanation_service.generate_extra_explanation(
         prediction["crop"], prediction["disease"], language,
         confidence=prediction["confidence"], guidance=guidance)
     if extra:
         result["extra_explanation"] = {"text": extra, "language": language, "ai_generated": True}
         result["explanation_source"] = "guidance+llm"
+
     _log(db, source, "ok", prediction, confidence)
     return _finish(result, t0, t_pre, t_inf)
 

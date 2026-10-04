@@ -262,5 +262,10 @@ def test_history_records_scans(client, fake_model, leaf_bytes):
     assert rows and {"crop", "disease", "confidence", "date"} <= set(rows[0])
 
 
+# In tests/test_backend.py
+
 def test_admin_stats(client):
-    assert "total_scans" in client.get("/api/admin/stats").json()
+    headers = {"Authorization": "Bearer admin_test_token"}
+    response = client.get("/api/admin/stats", headers=headers)
+    assert response.status_code == 200
+    assert "total_scans" in response.json()
